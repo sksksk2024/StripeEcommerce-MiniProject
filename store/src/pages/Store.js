@@ -7,7 +7,9 @@ function Store() {
 
   useEffect(() => {
     // Fetch products data from the backend
-    fetch('http://localhost:4000/api/products')
+    const backendUrl =
+      process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
+    fetch(`${backendUrl}/api/products`)
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error('Error fetching products:', error));

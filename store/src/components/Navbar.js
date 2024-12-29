@@ -6,12 +6,14 @@ import CartProduct from './CartProduct';
 function NavbarComponent() {
   const cart = useContext(CartContext);
   const [show, setShow] = useState(false);
-  const [totalCost, setTotalCost] = useState(0); // State to store the total cost
+  const [totalCost, setTotalCost] = useState(0);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const checkout = async () => {
-    await fetch('http://localhost:4000/checkout', {
+    const backendUrl =
+      process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
+    await fetch(`${backendUrl}/checkout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +40,7 @@ function NavbarComponent() {
     };
 
     fetchTotalCost();
-  }, [cart]); // Run when cart items change
+  }, [cart]);
 
   return (
     <>
@@ -64,7 +66,7 @@ function NavbarComponent() {
                   quantity={currentProduct.quantity}
                 />
               ))}
-              <h1>Total: ${totalCost.toFixed(2)}</h1> {/* Use the state here */}
+              <h1>Total: ${totalCost.toFixed(2)}</h1>
               <Button variant="success" onClick={checkout}>
                 Purchase items!
               </Button>

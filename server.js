@@ -8,7 +8,14 @@ const path = require('path'); // Import path for serving static files
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// Configure CORS
+const corsOptions = {
+  origin: ['http://localhost:3000', process.env.REACT_APP_BACKEND_URL], // Replace with your frontend URL
+};
+app.use(cors(corsOptions));
+
+// Parse incoming JSON requests
 app.use(express.json());
 
 // Stripe instance

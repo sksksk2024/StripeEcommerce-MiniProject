@@ -10,8 +10,10 @@ function CartProduct(props) {
   const [productData, setProductData] = useState(null);
 
   useEffect(() => {
+    const backendUrl =
+      process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
     // Fetch product data from the backend
-    fetch(`http://localhost:4000/api/products/${id}`)
+    fetch(`${backendUrl}/api/products/${id}`)
       .then((response) => response.json())
       .then((data) => setProductData(data));
   }, [id]);
