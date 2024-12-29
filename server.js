@@ -11,7 +11,9 @@ const app = express();
 
 // Configure CORS
 const corsOptions = {
-  origin: ['http://localhost:3000', process.env.REACT_APP_BACKEND_URL], // Replace with your frontend URL
+  origin: ['http://localhost:3000', process.env.REACT_APP_BACKEND_URL], // Make sure to replace this with correct frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow headers needed for your requests
 };
 app.use(cors(corsOptions));
 
@@ -71,14 +73,8 @@ app.post('/checkout', async (req, res) => {
     const session = await stripeInstance.checkout.sessions.create({
       line_items: lineItems,
       mode: 'payment',
-      success_url:
-        'http://localhost:3000/success' ||
-        'http://localhost:4000/success' ||
-        process.env.REACT_APP_BACKEND_URL,
-      cancel_url:
-        'http://localhost:3000/cancel' ||
-        'http://localhost:4000/cancel' ||
-        process.env.REACT_APP_BACKEND_URL,
+      success_url: `${process.env.REACT_APP_BACKEND_URL}/success`, // For success page
+      cancel_url: `${process.env.REACT_APP_BACKEND_URL}/cancel`, // For cancel page
     });
 
     res.send(
