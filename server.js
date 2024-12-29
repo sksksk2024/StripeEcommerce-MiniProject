@@ -2,15 +2,16 @@ const express = require('express');
 const dotenv = require('dotenv');
 var cors = require('cors');
 const stripe = require('stripe');
+const path = require('path'); // Import path for serving static files
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.static('public'));
 app.use(express.json());
 
+// Stripe instance
 const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY); // Correctly initialize Stripe with the secret key
 
 // Product data
@@ -32,12 +33,15 @@ const productsArray = [
   },
 ];
 
-// Get all products
+// Serve frontend static files
+const frontendPath = path.join(__dirname, 'store/build');
+app.use(express.static(frontendPath));
+
+// API Routes
 app.get('/api/products', (req, res) => {
   res.json(productsArray);
 });
 
-// Get product by ID
 app.get('/api/products/:id', (req, res) => {
   const product = productsArray.find((prod) => prod.id === req.params.id);
 
@@ -47,13 +51,12 @@ app.get('/api/products/:id', (req, res) => {
   res.json(product);
 });
 
-// Checkout route (existing logic)
 app.post('/checkout', async (req, res) => {
   console.log(req.body);
 
-  const items = req.body.items; // Items sent from client
+  const items = req.body.items;
   let lineItems = items.map((item) => ({
-    price: item.id, // Use price IDs from the client
+    price: item.id,
     quantity: item.quantity,
   }));
 
@@ -76,4 +79,11 @@ app.post('/checkout', async (req, res) => {
   }
 });
 
-app.listen(4000, () => console.log('Listening on port 4000!'));
+// Fallback route to serve React frontend
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
+// Start server
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}!`));
