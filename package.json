@@ -1,0 +1,17 @@
+{
+  "name": "stripeecommerce",
+  "version": "1.0.0",
+  "description": "Stripe Ecommerce. Experiment",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+  },
+  "author": "Alexandru Cota",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
